@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("FlashHelper")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Allows flash access of tempdata in controllers and views")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Softwire")]
 [assembly: AssemblyProduct("FlashHelper")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
