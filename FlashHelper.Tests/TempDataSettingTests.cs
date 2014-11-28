@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Razor.Generator;
 using NUnit.Framework;
 
 namespace FlashHelper.Tests
@@ -11,41 +12,44 @@ namespace FlashHelper.Tests
     public class TempDataSettingTests
     {
         private Controller controller;
+        private HtmlHelper helper;
 
         [SetUp]
         public void Setup()
         {
-            controller = new TestController {TempData = new TempDataDictionary()};
+            var tempData = new TempDataDictionary();
+            controller = new TestController {TempData = tempData};
+            helper = new HtmlHelper(new ViewContext {TempData = tempData}, new ViewPage());
         }
 
         [Test]
         public void FlashWarning_SetsWarnKey()
         {
-            const string expected = "test_error";
+            const string expected = "test_warning";
 
             controller.FlashWarning(expected);
 
-            Assert.AreEqual(expected, controller.TempData["warn"]);
+            StringAssert.Contains(expected, helper.Flash().ToHtmlString());
         }
 
         [Test]
         public void FlashSuccess_SetsSuccessKey()
         {
-            const string expected = "test_error";
+            const string expected = "test_success";
 
             controller.FlashSuccess(expected);
 
-            Assert.AreEqual(expected, controller.TempData["success"]);
+            StringAssert.Contains(expected, helper.Flash().ToHtmlString());
         }
 
         [Test]
         public void FlashInfo_SetsInfoKey()
         {
-            const string expected = "test_error";
+            const string expected = "test_info";
 
             controller.FlashInfo(expected);
 
-            Assert.AreEqual(expected, controller.TempData["error"]);
+            StringAssert.Contains(expected, helper.Flash().ToHtmlString());
         }
 
         [Test]
@@ -55,7 +59,7 @@ namespace FlashHelper.Tests
 
             controller.FlashError(expected);
 
-            Assert.AreEqual(expected, controller.TempData["error"]);
+            StringAssert.Contains(expected, helper.Flash().ToHtmlString());
         }
 
         private class TestController : Controller
