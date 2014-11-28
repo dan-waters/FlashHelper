@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("FlashHelper")]
 [assembly: AssemblyDescription("Allows flash access of tempdata in controllers and views")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Softwire")]
+[assembly: AssemblyCompany("dan-waters")]
 [assembly: AssemblyProduct("FlashHelper")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
