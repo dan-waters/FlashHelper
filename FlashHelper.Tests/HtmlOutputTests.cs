@@ -5,12 +5,18 @@ namespace FlashHelper.Tests
 {
     public class HtmlOutputTests
     {
-        private HtmlHelper helper = new HtmlHelper(new ViewContext(), new ViewPage());
+        private HtmlHelper helper;
+
+        [SetUp]
+        public void Setup()
+        {
+            helper = new HtmlHelper(new ViewContext {TempData = new TempDataDictionary()}, new ViewPage());
+        }
 
         [Test]
         public void DivIsGenerated()
         {
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.StartsWith("<div", actual);
             StringAssert.EndsWith("</div>", actual);
@@ -23,9 +29,9 @@ namespace FlashHelper.Tests
         [TestCase("error", "test_error")]
         public void ContentsOfTempData_AreOutputToDiv(string key, string expected)
         {
-            helper.ViewData.Add(key, expected);
+            helper.ViewContext.TempData.Add(key, expected);
 
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.Contains(expected, actual);
         }
@@ -33,13 +39,13 @@ namespace FlashHelper.Tests
         [Test]
         [TestCase("success", "alert alert-success")]
         [TestCase("info", "alert alert-info")]
-        [TestCase("warn", "alert alert-wanring")]
+        [TestCase("warn", "alert alert-warning")]
         [TestCase("error", "alert alert-danger")]
-        public void DivClass_IsDependentOnalertType(string key, string expectedClass)
+        public void DivClass_IsDependentOnAlertType(string key, string expectedClass)
         {
-            helper.ViewData.Add(key, "test");
+            helper.ViewContext.TempData.Add(key, "test");
 
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.Contains(expectedClass, actual);
         }
@@ -50,11 +56,11 @@ namespace FlashHelper.Tests
         [TestCase("warn", "test_warn")]
         public void ErrorIsMostImportant(string key, string value)
         {
-            var expected = "this should appear";
-            helper.ViewData.Add("error", expected);
-            helper.ViewData.Add(key, value);
+            const string expected = "this should appear";
+            helper.ViewContext.TempData.Add("error", expected);
+            helper.ViewContext.TempData.Add(key, value);
 
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.Contains(expected, actual);
             StringAssert.DoesNotContain(value, actual);
@@ -65,11 +71,11 @@ namespace FlashHelper.Tests
         [TestCase("warn", "test_warn")]
         public void SuccessIsSecondMostImportant(string key, string value)
         {
-            var expected = "this should appear";
-            helper.ViewData.Add("success", expected);
-            helper.ViewData.Add(key, value);
+            const string expected = "this should appear";
+            helper.ViewContext.TempData.Add("success", expected);
+            helper.ViewContext.TempData.Add(key, value);
 
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.Contains(expected, actual);
             StringAssert.DoesNotContain(value, actual);
@@ -79,11 +85,11 @@ namespace FlashHelper.Tests
         [TestCase("info", "test_info")]
         public void WarningIsThirdMostImportant(string key, string value)
         {
-            var expected = "this should appear";
-            helper.ViewData.Add("warn", expected);
-            helper.ViewData.Add(key, value);
+            const string expected = "this should appear";
+            helper.ViewContext.TempData.Add("warn", expected);
+            helper.ViewContext.TempData.Add(key, value);
 
-            var actual = helper.Flash();
+            var actual = helper.Flash().ToHtmlString();
 
             StringAssert.Contains(expected, actual);
             StringAssert.DoesNotContain(value, actual);
